@@ -1,19 +1,23 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/pejuangreceh/test-gemini.git/config"
-	"github.com/pejuangreceh/test-gemini.git/controllers"
+	"github.com/pejuangreceh/test-gemini.git/routes"
+	"github.com/sirupsen/logrus"
 	// application "test-gemini"
 )
 
 func main() {
 
-	e := echo.New()
-	v1 := "/api/elloy/v1"
-	var s *config.Server
-	baseController := controllers.NewBaseController(s)
-	e.POST(v1+"test", baseController.TextGenerate)
-	e.Logger.Fatal(e.Start("0.0.0.0:" + "8001"))
+	cfg := config.New()
+	app := config.NewServer(cfg)
+	e := routes.Configure(app)
+	err := app.Start(e)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"tag":   "App.Start.01",
+			"error": err,
+		}).Error("start server failed")
+	}
 
 }

@@ -40,3 +40,16 @@ func (r TextRequest) Validate(validationType string) interface{} {
 
 	return nil
 }
+func (r FileRequest) Validate(validationType string) interface{} {
+	if validationType == "thedevsaddam" {
+		return govalidator.MapData{
+			"image_upload": []string{"blacklist"},
+		}
+	} else {
+		return validation.ValidateStruct(&r,
+			validation.Field(&r.File, validation.Required),
+		)
+	}
+
+	return nil
+}
